@@ -10,11 +10,11 @@ import AppKit
 import Security
 
 public enum AppMover {
-        
-    public static func moveIfNecessary() {
+    @discardableResult
+    public static func moveIfNecessary() -> Bool {
         let fm = FileManager.default
         guard !Bundle.main.isInstalled,
-            let applications = preferredInstallDirectory() else { return }
+            let applications = preferredInstallDirectory() else { return false }
         let bundleUrl = Bundle.main.bundleURL
         let bundleName = bundleUrl.lastPathComponent
         let destinationUrl = applications.appendingPathComponent(bundleName)
@@ -36,28 +36,28 @@ public enum AppMover {
         alert.addButton(withTitle: "Move to Applications Folder")
         alert.addButton(withTitle: "Do Not Move")
         guard alert.runModal() == .alertFirstButtonReturn else {
-            return
+            return false
         }
         if needAuth {
             let result = authorizedInstall(from: bundleUrl, to: destinationUrl)
-            guard !result.cancelled else { moveIfNecessary(); return }
+            guard !result.cancelled else { return moveIfNecessary() }
             guard result.success else {
                 NSApplication.shared.terminate(self)
-                return
+                return false
             }
         } else {
             if fm.fileExists(atPath: destinationUrl.path) {
                 if AppMover.isApplicationAtUrlRunning(destinationUrl) {
                     NSWorkspace.shared.open(destinationUrl)
-                    return
+                    return false
                 } else {
                     guard (try? fm.trashItem(at: destinationUrl, resultingItemURL: nil)) != nil else {
-                        return
+                        return false
                     }
                 }
             }
             guard (try? fm.copyItem(at: bundleUrl, to: destinationUrl)) != nil else {
-                return
+                return false
             }
         }
         
@@ -69,7 +69,8 @@ public enum AppMover {
                 exit(0)
             }
         })
-        
+
+        return true
     }
     
     static func authorizedInstall(from sourceURL: URL, to destinationURL: URL) -> (cancelled: Bool, success: Bool) {
