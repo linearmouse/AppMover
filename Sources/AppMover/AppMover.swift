@@ -31,7 +31,7 @@ public enum AppMover {
         alert.messageText = "Move to Applications folder"
         alert.informativeText = "\(Bundle.main.localizedName) needs to move to your Applications folder in order to work properly."
         if needAuth {
-            alert.informativeText.append(" You need to authenticate with your administrator password to complete this step.")
+            alert.informativeText.append("You need to authenticate with your administrator password to complete this step.")
         }
         alert.addButton(withTitle: "Move to Applications Folder")
         alert.addButton(withTitle: "Do Not Move")
