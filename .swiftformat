@@ -1,0 +1,4 @@
+--commas inline
+--disable wrapMultilineStatementBraces
+--header "MIT License\nCopyright (c) {year} LinearMouse\nCopyright (c) 2020 Oskar Groth"
+--maxwidth 120

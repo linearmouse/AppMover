@@ -8,10 +8,12 @@ let package = Package(
     products: [
         .library(
             name: "AppMover",
-            targets: ["AppMover"]),
+            targets: ["AppMover"]
+        )
     ],
     targets: [
         .target(
-            name: "AppMover"),
+            name: "AppMover"
+        )
     ]
 )
